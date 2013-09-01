@@ -14,32 +14,39 @@ public class Percolation {
 
     // Assertion helpers
     private void assertRowBounds(int i) {
-        if (i < 0 || i >= N) 
-            throw new IndexOutOfBoundsException("row index i out of bounds");
+        if (i <= 0 || i > N)
+            throw new IndexOutOfBoundsException("row index " + i 
+                                                +" out of bounds");
     }
 
     private void assertColBounds(int j) {
-        if (j < 0 || j >= N) 
-            throw new IndexOutOfBoundsException("col index j out of bounds");
+        if (j <= 0 || j > N) 
+            throw new IndexOutOfBoundsException("col index " + j 
+                                                +" out of bounds");
     }
     
     // open site (row i, column j) if it is not already
     public void open(int i, int j) {
         assertRowBounds(i);
         assertColBounds(j);
+        int row = i - 1;
+        int col = j - 1;
         if (!isOpen(i, j)) {
-            grid[i][j] = true;
+            grid[row][col] = true;
             for (int neighbor = -1; neighbor < 2; neighbor += 2) {
-                if (isOpenInternal((i + neighbor), j)) {
-                    uf.union((i * N) + j, ((i + neighbor) * N) + j);
+                // Propagate fullness to each of the open neighbors
+                if (isOpenInternal((row + neighbor), col)) {
+                    // vertical neighbor
+                    uf.union((row * N) + col, ((row + neighbor) * N) + col);
                 }
-                if (isOpenInternal(i, (j + neighbor))) {
-                    uf.union((i * N) + j, (i * N) + (j + neighbor));
+                if (isOpenInternal(row, (col + neighbor))) {
+                    // horizontal neighbor
+                    uf.union((row * N) + col, (row * N) + (col + neighbor));
                 }
             }
             // connect to the input and output units if necessary
-            if (i == 0) uf.union((i * N) + j, (N * N));
-            if (i == N-1) uf.union((i * N) + j, (N * N) + 1);
+            if (row == 0) uf.union((row * N) + col, (N * N));
+            if (col == N-1) uf.union((row * N) + col, (N * N) + 1);
         }
     }
     
@@ -47,23 +54,27 @@ public class Percolation {
     public boolean isOpen(int i, int j) {
         assertRowBounds(i);
         assertColBounds(j);
-        return grid[i][j];
+        int row = i - 1;
+        int col = j - 1;
+        return grid[row][col];
     }
 
-    private boolean isOpenInternal(int i, int j) {
+    private boolean isOpenInternal(int row, int col) {
         //private convenience method with bounds checking
         // which simplifies the open() logic.
         
         // Off the grid counts as not open
-        if (i < 0 || i >= N || j < 0 || j >= N) return false;
-        return grid[i][j];
+        if (row < 0 || row >= N || col < 0 || col >= N) return false;
+        return grid[row][col];
     }
     
     // is site (row i, column j) full?
     public boolean isFull(int i, int j) {   
         assertRowBounds(i);
         assertColBounds(j);
-        return uf.connected(N * N, (i * N) + j);
+        int row = i - 1;
+        int col = j - 1;
+        return uf.connected(N * N, (row * N) + col);
     }
 
     // does the system percolate?
@@ -81,9 +92,9 @@ public class Percolation {
             sb.append("-");
         }
         sb.append("\n");
-        for (int i = 0; i < N; i++) {
+        for (int i = 1; i <= N; i++) {
             sb.append("|");
-            for (int j = 0; j < N; j++) {
+            for (int j = 1; j <= N; j++) {
                 if (isFull(i, j)) 
                     sb.append("~");
                 else if (!isOpen(i, j))
@@ -110,7 +121,7 @@ public class Percolation {
         // TEST: 1x1, full
         assertPercolates(oneByOne, false);
         // TEST: 1x1, open
-        oneByOne.open(0, 0);
+        oneByOne.open(1, 1);
         assertPercolates(oneByOne, true);
         
         // Simple open exception tests
@@ -124,7 +135,7 @@ public class Percolation {
         }
 
         try {
-            oneByOne.open(0, -1);
+            oneByOne.open(1, -1);
             testsPassed = false;
             System.out.println("Should have thrown an exception!");
         }
@@ -133,7 +144,7 @@ public class Percolation {
         }
         
         try {
-            oneByOne.open(1, 0);
+            oneByOne.open(2, 1);
             testsPassed = false;
             System.out.println("Should have thrown an exception");
         }
@@ -142,7 +153,7 @@ public class Percolation {
         }
 
         try {
-            oneByOne.open(0, 1);
+            oneByOne.open(1, 2);
             testsPassed = false;
             System.out.println("Should have thrown an exception");
         }
@@ -152,7 +163,7 @@ public class Percolation {
 
         // Simple isOpen exception tests
         try {
-            oneByOne.isOpen(-1, 0);
+            oneByOne.isOpen(-1, 1);
             testsPassed = false;
             System.out.println("Should have thrown an exception!");
         }
@@ -161,7 +172,7 @@ public class Percolation {
         }
 
         try {
-            oneByOne.isOpen(0, -1);
+            oneByOne.isOpen(1, 0);
             testsPassed = false;
             System.out.println("Should have thrown an exception!");
         }
@@ -170,7 +181,7 @@ public class Percolation {
         }
         
         try {
-            oneByOne.isOpen(1, 0);
+            oneByOne.isOpen(2, 1);
             testsPassed = false;
             System.out.println("Should have thrown an exception");
         }
@@ -179,7 +190,7 @@ public class Percolation {
         }
 
         try {
-            oneByOne.isOpen(0, 1);
+            oneByOne.isOpen(1, 2);
             testsPassed = false;
             System.out.println("Should have thrown an exception");
         }
@@ -192,18 +203,18 @@ public class Percolation {
         System.out.print("2x2");
         Percolation twoByTwo = new Percolation(2);
         assertPercolates(twoByTwo, false);
-        twoByTwo.open(1, 0);
+        twoByTwo.open(2, 1);
         assertPercolates(twoByTwo, false);
-        twoByTwo.open(0, 1);
+        twoByTwo.open(1, 2);
         assertPercolates(twoByTwo, false);
-        twoByTwo.open(1, 1);
+        twoByTwo.open(2, 2);
         assertPercolates(twoByTwo, true);
-        twoByTwo.open(0, 0);
+        twoByTwo.open(1, 1);
         assertPercolates(twoByTwo, true);
         
         for (int i = 0; i < 4; i++) {
             twoByTwo = new Percolation(2);
-            twoByTwo.open(i / 2, i % 2);
+            twoByTwo.open((i / 2) + 1, (i % 2) + 1);
             assertPercolates(twoByTwo, false);
         }
         System.out.println("");
@@ -214,14 +225,14 @@ public class Percolation {
         assertPercolates(threeByThree, false);
         for (int i = 0; i < 9; i++) {
             threeByThree = new Percolation(3);
-            threeByThree.open(i / 3, i % 3);
+            threeByThree.open((i / 3) + 1, (i % 3) + 1);
             assertPercolates(threeByThree, false);
         }
         for (int i = 0; i < 9; i++) {
-            for (int j = i + 1; j < 9; j++) {
+            for (int j = 0; j < 9; j++) {
                 threeByThree = new Percolation(3);
-                threeByThree.open(i / 3, i % 3);
-                threeByThree.open(j / 3, j % 3);
+                threeByThree.open((i / 3) + 1, (i % 3) + 1);
+                threeByThree.open((j / 3) + 1, (j % 3) + 1);
                 assertPercolates(threeByThree, false);
             }
         }
