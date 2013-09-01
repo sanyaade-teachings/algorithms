@@ -1,3 +1,15 @@
+/*
+ * PercolationStats
+ *  Percolation simulator for algs4e class on coursera.org
+ *  - Usage: java PercolationStats N T
+ *    - N = an N * N percolation grid
+ *    - T = Number of experients.
+ *
+ * Author: Mark Pauley
+ * Created: Sept 1, 2013
+ *
+ */
+
 public class PercolationStats {
     private double sum;     // used for the mean
     private double sumSqr;  // used for the stddev

@@ -1,3 +1,15 @@
+/*
+ * Percolation.java
+ *  percolation simulator ADT for algs4e class on coursera.org
+ *  - determines if a connection exists between the top row 
+ *   and the bottom row.
+ *  - Run main without arugments for the unit tests.
+ *
+ * Author: Mark Pauley (pauley@unsaturated.net)
+ * Created: Sept 1, 2013
+ */
+
+
 public class Percolation {
     private static boolean testsPassed;
 
