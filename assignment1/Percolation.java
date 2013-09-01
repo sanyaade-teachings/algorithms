@@ -32,23 +32,23 @@ public class Percolation {
         int row = i - 1;
         int col = j - 1;
         if (!isOpen(i, j)) {
+            grid[row][col] = true;
             for (int neighbor = -1; neighbor <= 1; neighbor += 2) {
-                // Propagate fullness to each of the open neighbors
+                //Propagate fullness to each of the open neighbors
+                // the sides are considered frozen closed.
+                // 1) vertical neighbors
                 if (isOpenInternal((row + neighbor), col)) {
-                    // vertical neighbor
                     uf.union((row * N) + col, ((row + neighbor) * N) + col);
                 }
+                // 2) horizontal neighbors
                 if (isOpenInternal(row, (col + neighbor))) {
-                    // horizontal neighbor
                     uf.union((row * N) + col, (row * N) + (col + neighbor));
                 }
             }
-            // connect to the input and output units if necessary
+            // connect to the input if we're at the top
             if (row == 0) uf.union((row * N) + col, (N * N));
+            // connect to the output if we're at the bottom
             if (row == N-1) uf.union((row * N) + col, (N * N) + 1);
-
-            // mark this row as open for future propagation
-            grid[row][col] = true;
         }
     }
     

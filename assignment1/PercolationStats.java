@@ -16,8 +16,8 @@ public class PercolationStats {
             while (!perc.percolates()) {
                 int x = StdRandom.uniform(0, N);
                 int y = StdRandom.uniform(0, N);
-                if (perc.isFull(x, y)) {
-                    perc.open(x, y);
+                if (!perc.isOpen(x + 1, y + 1)) {
+                    perc.open(x + 1, y + 1);
                     numOpen++;
                 }
             }
@@ -35,7 +35,8 @@ public class PercolationStats {
 
     public double stddev() {
         // sample standard deviation of percolation threshold
-        return ((sumSqr / T) - (mean() * mean()));
+        if (T == 1) return Double.NaN;
+        return Math.sqrt((sumSqr / T) - (mean() * mean()));
     }
     
     public double confidenceLo() {
