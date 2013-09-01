@@ -15,13 +15,15 @@ public class Percolation {
 
     private boolean[][] grid;
     private int N;
-    private WeightedQuickUnionUF uf;
+    private WeightedQuickUnionUF percUF;
+    private WeightedQuickUnionUF fullUF;
 
     public Percolation(int N) {
         // create N-by-N grid, with all sites blocked
         grid = new boolean[N][N];
         this.N = N;
-       uf = new WeightedQuickUnionUF(N * N + 2);
+       percUF = new WeightedQuickUnionUF(N * N + 2);
+       fullUF = new WeightedQuickUnionUF(N * N + 2);
     }
 
     // Assertion helpers
@@ -50,17 +52,26 @@ public class Percolation {
                 // the sides are considered frozen closed.
                 // 1) vertical neighbors
                 if (isOpenInternal((row + neighbor), col)) {
-                    uf.union((row * N) + col, ((row + neighbor) * N) + col);
+                    fullUF.union((row * N) + col, 
+                                 ((row + neighbor) * N) + col);
+                    percUF.union((row * N) + col,
+                                 ((row + neighbor) * N) + col);
                 }
                 // 2) horizontal neighbors
                 if (isOpenInternal(row, (col + neighbor))) {
-                    uf.union((row * N) + col, (row * N) + (col + neighbor));
+                    fullUF.union((row * N) + col, 
+                                 (row * N) + (col + neighbor));
+                    percUF.union((row * N) + col, 
+                                 (row * N) + (col + neighbor));
                 }
             }
             // connect to the input if we're at the top
-            if (row == 0) uf.union((row * N) + col, (N * N));
+            if (row == 0) {
+                fullUF.union((row * N) + col, (N * N));
+                percUF.union((row * N) + col, (N * N));
+            }
             // connect to the output if we're at the bottom
-            if (row == N-1) uf.union((row * N) + col, (N * N) + 1);
+            if (row == N-1) percUF.union((row * N) + col, (N * N) + 1);
         }
     }
     
@@ -88,13 +99,13 @@ public class Percolation {
         assertColBounds(j);
         int row = i - 1;
         int col = j - 1;
-        return uf.connected(N * N, (row * N) + col);
+        return fullUF.connected(N * N, (row * N) + col);
     }
 
     // does the system percolate?
     public boolean percolates() {
         // node N^2 will be input, N^2 + 1 will be output
-        return uf.connected(N * N, (N * N) + 1);
+        return percUF.connected(N * N, (N * N) + 1);
     }
     
     // Helpful visualization tool
