@@ -1,0 +1,64 @@
+public class PercolationStats {
+    private double sum;     // used for the mean
+    private double sumSqr;  // used for the stddev
+    private int T;
+    private int N;
+    
+    public PercolationStats(int N, int T) {   
+        // perform T independent computational experiments on an N-by-N grid
+        sum = 0.0;
+        sumSqr = 0.0;   
+        this.N = N;
+        this.T = T;
+        for (int experimentNum = 0; experimentNum < T; experimentNum++) {
+            Percolation perc = new Percolation(N);
+            int numOpen = 0;
+            while (!perc.percolates()) {
+                int x = StdRandom.uniform(0, N);
+                int y = StdRandom.uniform(0, N);
+                if (perc.isFull(x, y)) {
+                    perc.open(x, y);
+                    numOpen++;
+                }
+            }
+            double vacancyProbability = 
+                ((double) numOpen) / ((double) this.N * this.N);
+            sum += vacancyProbability;
+            sumSqr += (vacancyProbability * vacancyProbability);
+        }
+    }
+    
+    public double mean() {
+        // sample mean of percolation threshold
+        return sum / T;
+    }
+
+    public double stddev() {
+        // sample standard deviation of percolation threshold
+        return ((sumSqr / T) - (mean() * mean()));
+    }
+    
+    public double confidenceLo() {
+        // returns lower bound of the 95% confidence interval
+        return mean() - ((1.96*stddev()) / T);
+    }
+
+    public double confidenceHi() {
+        // returns upper bound of the 95% confidence interval
+        return mean() + ((1.96*stddev()) / T);
+    }
+
+    public static void main(String[] args) {
+        // test client, described below
+        int N = Integer.parseInt(args[0]);
+        int T = Integer.parseInt(args[1]);
+        PercolationStats stats = new PercolationStats(N, T);
+        System.out.println(String.format("%-22s = ", "mean") 
+                           + stats.mean());
+        System.out.println(String.format("%-22s = ", "stddev") 
+                           + stats.stddev());
+        System.out.println(String.format("%-22s = ", "95% confidenceInterval") 
+                           + stats.confidenceLo() + ", " 
+                           + stats.confidenceHi());
+    }
+}
