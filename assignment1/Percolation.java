@@ -32,8 +32,7 @@ public class Percolation {
         int row = i - 1;
         int col = j - 1;
         if (!isOpen(i, j)) {
-            grid[row][col] = true;
-            for (int neighbor = -1; neighbor < 2; neighbor += 2) {
+            for (int neighbor = -1; neighbor <= 1; neighbor += 2) {
                 // Propagate fullness to each of the open neighbors
                 if (isOpenInternal((row + neighbor), col)) {
                     // vertical neighbor
@@ -46,7 +45,10 @@ public class Percolation {
             }
             // connect to the input and output units if necessary
             if (row == 0) uf.union((row * N) + col, (N * N));
-            if (col == N-1) uf.union((row * N) + col, (N * N) + 1);
+            if (row == N-1) uf.union((row * N) + col, (N * N) + 1);
+
+            // mark this row as open for future propagation
+            grid[row][col] = true;
         }
     }
     
@@ -80,7 +82,7 @@ public class Percolation {
     // does the system percolate?
     public boolean percolates() {
         // node N^2 will be input, N^2 + 1 will be output
-        return uf.connected(N * N, (N *N) + 1);
+        return uf.connected(N * N, (N * N) + 1);
     }
     
     // Helpful visualization tool
@@ -218,7 +220,7 @@ public class Percolation {
             assertPercolates(twoByTwo, false);
         }
         System.out.println("");
-
+        
         //Test: three by three percolations
         System.out.print("3x3");
         Percolation threeByThree = new Percolation(3);
