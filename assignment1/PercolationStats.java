@@ -17,6 +17,18 @@ public class PercolationStats {
     private int N;
     
     public PercolationStats(int N, int T) {   
+        // Check arguments for validity
+        if (N <= 0) {
+            throw new IllegalArgumentException("Illegal argument N: "
+                                               + N);
+        }
+
+        if (T <= 0) {
+            throw new IllegalArgumentException("Illegal argument T: "
+                                               + T);
+        }
+            
+
         // perform T independent computational experiments on an N-by-N grid
         sum = 0.0;
         sumSqr = 0.0;   
@@ -65,11 +77,6 @@ public class PercolationStats {
         // test client, described below
         int N = Integer.parseInt(args[0]);
         int T = Integer.parseInt(args[1]);
-        if (N <= 0 || T <= 0) {
-            throw new IllegalArgumentException("Illegal arguments: " 
-                                               + N + " "
-                                               + T);
-        }
 
         PercolationStats stats = new PercolationStats(N, T);
         System.out.println(String.format("%-22s = ", "mean") 
