@@ -1,8 +1,9 @@
 assignmentObjects = Percolation PercolationStats
+testObjects = Percolation PercolationStats
 otherObjects = PercolationVisualizer
 assignmentName = percolation
 
 include ../algs4.mk
 
-test: Percolation.class
-	java -classpath ./:../stdlib.jar:../algs4.jar Percolation
+PercolationStats.test: PercolationStats.class
+	$(JAVA) PercolationStats 1024 100
