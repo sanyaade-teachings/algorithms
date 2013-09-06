@@ -1,0 +1,14 @@
+#OS junk files
+[Tt]humbs.db
+*.DS_Store
+*.bak*
+
+#emacs turds
+*~
+TAGS
+
+#class files
+*.class
+
+#zip files
+*.zip
