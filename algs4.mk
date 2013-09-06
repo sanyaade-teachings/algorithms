@@ -42,4 +42,4 @@ $(assignmentName).zip: checkstyle findbugs
 test: $(patsubst %,%.test,$(testObjects))
 
 clean:
-	rm -f $(assignmentClassFiles) $(assignmentName).zip *~ 
+	rm -f *.class $(assignmentName).zip *~

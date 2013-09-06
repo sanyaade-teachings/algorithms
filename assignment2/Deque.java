@@ -5,10 +5,13 @@ public class Deque<Item> implements Iterable<Item> {
     // internal node class
     private class Node<Item> {
         private Item item;
+        private Node<Item> prev;
         private Node<Item> next;
         private Node(Item item) {
             if (item == null) throw new NullPointerException();
             this.item = item;
+            this.prev = null;
+            this.next = null;
         }
     }
 
@@ -41,19 +44,22 @@ public class Deque<Item> implements Iterable<Item> {
         Node<Item> newNode = new Node<Item>(item);
         // this node is the new head
         newNode.next = head;
-        head = newNode;
-        if (tail == null) {
-            // if the list was empty, we're also the new tail
+        if (head == null) {
             tail = newNode;
         }
+        else {
+            head.prev = newNode;
+        }
+        head = newNode;
+        size++;
     }
     
     public void addLast(Item item) {
         // insert the item at the end
         Node<Item> newNode = new Node<Item>(item);
-        newNode.next = null;
+        newNode.prev = tail;
         // this node is the new tail.
-        if (tail != null) {
+        if  (tail != null) {
             tail.next = newNode;
         }
         tail = newNode;
@@ -61,17 +67,39 @@ public class Deque<Item> implements Iterable<Item> {
             // if the list was empty, we're also the new head
             head = newNode;
         }
+        size++;
     }
     
     public Item removeFirst() {
+        // Check for empty deque
+        if (head == null) throw new java.util.NoSuchElementException();
         Item value = head.item;
         head = head.next;
+        if (head != null) {
+            head.prev = null;
+        }
+        else {
+            tail = null;
+        }
+        size--;
         return value;
     }
 
     public Item removeLast() {
-        // delete and return the item at the end
-        return null;
+        if (tail == null) throw new java.util.NoSuchElementException();
+        Item value = tail.item;
+        if (tail.prev != null) {
+            tail = tail.prev;
+            tail.next = null;
+        }
+        else {
+            // that was the last item
+            tail = null;
+            head = null;
+        }
+        
+        size--;
+        return value;
     }
     
     public Iterator<Item> iterator() {
