@@ -65,6 +65,61 @@ public class DequeTest {
         assertEquals(intDeque.size(), 0);
     }
 
+    @Test
+    public void testAddFirstRemoveLastSingle() {
+        Deque<Integer> intDeque = new Deque<Integer>();
+        for(int i = 0; i < 100; i++) {
+            intDeque.addFirst(i);
+            int j = intDeque.removeLast();
+            assertEquals(i, j);
+        }
+        assertTrue(intDeque.isEmpty());
+        assertEquals(intDeque.size(), 0);
+    }
+
+    @Test
+    public void testAddFirstRemoveLastMany() {
+        Deque<Integer> intDeque = new Deque<Integer>();
+        for(int i = 0; i < 100; i++) {
+            intDeque.addFirst(i);
+        }
+        assertEquals(intDeque.size(), 100);
+        for(int i = 0; i < 100; i++) {
+            int j = intDeque.removeLast();
+            assertEquals(i, j);
+        }
+        assertTrue(intDeque.isEmpty());
+        assertEquals(intDeque.size(), 0);
+    }
+
+    @Test
+    public void testAddLastRemoveFirstSingle() {
+        Deque<Integer> intDeque = new Deque<Integer>();
+        for(int i = 0; i < 100; i++) {
+            intDeque.addLast(i);
+            int j = intDeque.removeFirst();
+            assertEquals(i, j);
+        }
+        assertTrue(intDeque.isEmpty());
+        assertEquals(intDeque.size(), 0);
+    }
+
+    @Test
+    public void testAddLastRemoveFirstMany() {
+        Deque<Integer> intDeque = new Deque<Integer>();
+        for(int i = 0; i < 100; i++) {
+            intDeque.addLast(i);
+        }
+        assertEquals(intDeque.size(), 100);
+        for(int i = 0; i < 100; i++) {
+            int j = intDeque.removeFirst();
+            assertEquals(i, j);
+        }
+        assertTrue(intDeque.isEmpty());
+        assertEquals(intDeque.size(), 0);
+    }
+    
+
     @Test(expected=NoSuchElementException.class)
     public void testRemoveFirstEmpty() {
         Deque<String> strDeque = new Deque<String>();
