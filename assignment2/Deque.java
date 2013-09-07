@@ -16,6 +16,28 @@ public class Deque<Item> implements Iterable<Item> {
     }
 
     // internal iterator class
+    private class NodeIterator<Item> implements Iterator<Item> {
+        private Node<Item> curNode;
+
+        private NodeIterator(Node<Item> head) {
+            curNode = head;
+        }
+
+        public boolean hasNext() {
+            return (curNode != null);
+        }
+        
+        public Item next() {
+            if (curNode == null) throw new java.util.NoSuchElementException();
+            Item item = curNode.item;
+            curNode = curNode.next;
+            return item;
+        }
+        
+        public void remove() {
+            throw new UnsupportedOperationException();
+        }
+    }
 
 
     private Node<Item> head;
@@ -104,7 +126,8 @@ public class Deque<Item> implements Iterable<Item> {
     
     public Iterator<Item> iterator() {
         // return an iterator over items in order from front to end
-        return null;
+        Iterator<Item> iter = new NodeIterator<Item>(head);
+        return iter;
     }
 
 }
