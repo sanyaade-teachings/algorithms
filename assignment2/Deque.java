@@ -1,3 +1,13 @@
+/*
+ * Deque
+ *
+ * A front and rear inserting collection API.
+ *
+ * Author: Mark Pauley
+ * Date: 9-1-2013
+ *
+ */
+
 import java.util.Iterator;
 
 public class Deque<Item> implements Iterable<Item> {
@@ -129,5 +139,7 @@ public class Deque<Item> implements Iterable<Item> {
         Iterator<Item> iter = new NodeIterator<Item>(head);
         return iter;
     }
+
+    // Tests live in DequeTest.java, a jUnit test object for Deque.
 
 }
