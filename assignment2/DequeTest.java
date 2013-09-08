@@ -37,6 +37,18 @@ public class DequeTest {
         assertEquals(0, intDeque.size());
         assertTrue(intDeque.isEmpty());
     }
+    
+    @Test(expected=NullPointerException.class)
+    public void testAddFirstNull() {
+        Deque<String> strDeque = new Deque<String>();
+        strDeque.addFirst(null);
+    }
+
+    @Test(expected=NullPointerException.class)
+    public void testAddLastNull() {
+        Deque<String> strDeque = new Deque<String>();
+        strDeque.addLast(null);
+    }
 
     @Test
     public void testAddRemoveLastSingle() {
