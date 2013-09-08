@@ -229,7 +229,7 @@ public class DequeTest {
     }
 
     @Test
-    public void multiIterator() {
+    public void testMultiIterator() {
         Deque<Integer> intDeque = new Deque<Integer>();
         for (int i = 0; i < 100; i++) {
             intDeque.addLast(i);
@@ -247,6 +247,20 @@ public class DequeTest {
         for (int i = 0; i < intIters.length; i++) {
             assertFalse(intIters[i].hasNext());
         }
+    }
+    
+    @Test
+    public void testIteratorForEach() {
+        Deque<Integer> intDeque = new Deque<Integer>();
+        for(int i = 0; i < 100; i++) {
+            intDeque.addFirst(i);
+        }
+        int i = 99;
+        for(Integer j : intDeque) {
+            assertEquals(i, j.intValue());
+            i--;
+        }
+        assertEquals(i, -1);
     }
     
     public static void main(String args[]) {
