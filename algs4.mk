@@ -36,8 +36,8 @@ findbugs: $(assignmentClassFiles)
 
 zip: $(assignmentName).zip
 
-$(assignmentName).zip: checkstyle findbugs
-	zip $(assignmentName).zip Percolation.java PercolationStats.java
+$(assignmentName).zip: checkstyle findbugs $(assignmentJavaFiles)
+	zip $(assignmentName).zip $(assignmentJavaFiles)
 
 test: $(patsubst %,%.test,$(testObjects))
 
