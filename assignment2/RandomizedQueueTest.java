@@ -66,14 +66,14 @@ public class RandomizedQueueTest {
 
     @Test
     public void testRandomCoinFlip() {
-        int sums[] = doExperiments(100000, 2);
-        verifyExperiments(sums, 100000, 2);
+        int sums[] = doExperiments(10000, 2);
+        verifyExperiments(sums, 10000, 2);
     }
 
     @Test
     public void testCardShuffle() {
-        int sums[] = doExperiments(100000, 52);
-        verifyExperiments(sums, 100000, 52);
+        int sums[] = doExperiments(10000, 52);
+        verifyExperiments(sums, 10000, 52);
     }
     
     // returns an array of sums
@@ -109,6 +109,31 @@ public class RandomizedQueueTest {
             double mean = sums[i] / ((double)numExperiments);
             assertTrue(mean <= upperLimit);
             assertTrue(mean >= lowerLimit);
+        }
+    }
+
+    @Test(expected=NoSuchElementException.class)
+    public void testSampleNoEntries() {
+        RandomizedQueue<Integer> intQueue = new RandomizedQueue<Integer>();
+        intQueue.sample();
+    }
+
+    @Test
+    public void testSampleOneEntry() {
+        RandomizedQueue<Integer> intQueue = new RandomizedQueue<Integer>();
+        intQueue.enqueue(127);
+        assertEquals(127, intQueue.sample().intValue());
+    }
+
+    @Test
+    public void testSampleManyEntries() {
+        RandomizedQueue<Integer> intQueue = new RandomizedQueue<Integer>();
+        for(int i = 0; i < 1000; i++) {
+            intQueue.enqueue(i);
+            assertTrue( intQueue.sample() != null );
+        }
+        for(int i = 0; i < 1000; i++) {
+            assertTrue(intQueue.sample() != null);
         }
     }
 
