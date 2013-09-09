@@ -66,24 +66,26 @@ public class RandomizedQueueTest {
 
     @Test
     public void testRandomCoinFlip() {
-        int sums[] = new int[2];
-        double means[] = new double[sums.length];
-        int numExperiments = 1000;
+        int sums[] = doExperiments(100000, 2);
+        verifyExperiments(sums, 100000, 2);
+    }
+
+    @Test
+    public void testCardShuffle() {
+        int sums[] = doExperiments(100000, 52);
+        verifyExperiments(sums, 100000, 52);
+    }
+    
+    // returns an array of sums
+    private int[] doExperiments(int numExperiments, int setSize) {
+        int sums[] = new int[setSize];
         for(int i = 0; i < sums.length; i++) {
             sums[i] = 0;
         }
         for(int i = 0; i < numExperiments; i++) {
             doOneExperiment(sums);
         }
-        double ideal = sums.length / 2.0;
-        double epsilon = (numExperiments / 100.0) * 2;
-        double upperLimit = ideal + epsilon;
-        double lowerLimit = ideal - epsilon;
-        for(int i = 0; i < sums.length; i++) {
-            means[i] = sums[i] / ((double)numExperiments);
-            assertTrue(means[i] <= upperLimit);
-            assertTrue(means[i] >= lowerLimit);
-        }
+        return sums;
     }
 
     private void doOneExperiment(int[] accumulator) {
@@ -93,6 +95,20 @@ public class RandomizedQueueTest {
         }
         for(int i = 0; i < accumulator.length; i++) {
             accumulator[i] += intQueue.dequeue();
+        }
+    }
+
+    private void verifyExperiments(int[] sums, 
+                                   int numExperiments, 
+                                   int setSize) {
+        double ideal = (setSize - 1) / 2.0;
+        double epsilon = (100.0 / numExperiments) * setSize * 4.0;
+        double upperLimit = ideal + epsilon;
+        double lowerLimit = ideal - epsilon;
+        for(int i = 0; i < sums.length; i++) {
+            double mean = sums[i] / ((double)numExperiments);
+            assertTrue(mean <= upperLimit);
+            assertTrue(mean >= lowerLimit);
         }
     }
 
