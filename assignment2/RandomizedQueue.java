@@ -11,10 +11,50 @@
 import java.util.Iterator;
 
 public class RandomizedQueue<Item> implements Iterable<Item> {
+
+    private class RandomIterator implements Iterator<Item> {
+        private int[] iterationTable;
+        private int index;
+
+        private Item[] items;
+
+        public RandomIterator(Item[] items, int size) {
+            // no defensive copy... too expensive
+            this.items = items;
+            index = 0;
+            if (size == 0) {
+                return;
+            }
+            iterationTable = new int[size];
+            // fill the iteration table
+            iterationTable[0] = 0;
+            for (int i = 1; i < size; i++) {
+                int j = StdRandom.uniform(i);
+                // shuffle in the new index
+                int temp = iterationTable[j];
+                iterationTable[j] = i;
+                iterationTable[i] = temp;
+            }
+        }
+
+        public boolean hasNext() {
+            return (iterationTable != null && index < iterationTable.length);
+        }
+
+        public Item next() {
+            if (iterationTable == null || index >= iterationTable.length) {
+                throw new java.util.NoSuchElementException();
+            }
+            return items[iterationTable[index++]];
+        }
+
+        public void remove() {
+            throw new UnsupportedOperationException();
+        }
+    }
     
     private Item[] items;
     private int size;
-    
 
     public RandomizedQueue() {
         // construct an empty randomized queue
@@ -105,7 +145,7 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
     
     public Iterator<Item> iterator() {
         // return an independent iterator over items in random order
-        return null;
+        return new RandomIterator(items, size);
     }
 
 }

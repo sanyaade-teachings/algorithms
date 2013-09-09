@@ -137,6 +137,71 @@ public class RandomizedQueueTest {
         }
     }
 
+    @Test
+    public void testEmptyIteratorHasNext() {
+        RandomizedQueue<Integer> intQueue = new RandomizedQueue<Integer>();
+        Iterator<Integer> intIter = intQueue.iterator();
+        assertNotNull(intIter);
+        assertFalse(intIter.hasNext());
+    }
+
+    @Test(expected=NoSuchElementException.class)
+    public void testEmptyIteratorNext() {
+        RandomizedQueue<Integer> intQueue = new RandomizedQueue<Integer>();
+        Iterator<Integer> intIter = intQueue.iterator();
+        int i = intIter.next();
+        assertFalse(true);
+    }
+
+    @Test
+    public void testIteratorSingleElement() {
+        RandomizedQueue<Integer> intQueue = new RandomizedQueue<Integer>();
+        intQueue.enqueue(127);
+        Iterator<Integer> intIter = intQueue.iterator();
+        assertTrue(intIter.hasNext());
+        assertEquals(127, intIter.next().intValue());
+        assertFalse(intIter.hasNext());
+        assertFalse(intQueue.isEmpty());
+    }
+
+    @Test
+    public void testIteratorManyElements() {
+        RandomizedQueue<Integer> intQueue = new RandomizedQueue<Integer>();
+        int[] numTimesSeen = new int[1000];
+        for (int i = 0; i < 1000; i++) {
+            intQueue.enqueue(i);
+            numTimesSeen[i] = 0;
+        }
+        for(Integer i : intQueue) {
+            numTimesSeen[i.intValue()]++;
+        }
+        for(int i = 0; i < 1000; i++) {
+            assertEquals(1, numTimesSeen[i]);
+        }
+    }
+
+    @Test
+    public void testMultiIterator() {
+        RandomizedQueue<Integer> intQueue = new RandomizedQueue<Integer>();
+        Iterator<Integer>[] iterators = new Iterator[1000];
+        for (int i = 0; i < 1000; i++) {
+            intQueue.enqueue(i);
+        }
+        for(int i = 0; i < 1000; i++) {
+            iterators[i] = intQueue.iterator();
+        }
+        for(int i = 0; i < 1000; i++) {
+            for(int j = 0; j < 1000; j++) {
+                assertTrue(iterators[j].hasNext());
+                iterators[j].next();
+            }
+        }
+        for(int i = 0; i < 1000; i++) {
+            assertFalse(iterators[i].hasNext());
+        }
+    }
+
+    
     public static void main(String args[]) {
         org.junit.runner.JUnitCore.main("RandomizedQueueTest");
     }
