@@ -41,14 +41,35 @@ public class Point implements Comparable<Point> {
 
     // slope between this point and that point
     public double slopeTo(Point that) {
-        /* YOUR CODE HERE */
-        return 0.0;
+        
+        if (this.x == that.x) {
+            if (this.y == that.y) return Double.NEGATIVE_INFINITY;
+            else return Double.POSITIVE_INFINITY;
+        }
+        if (this.y == that.y) return 0.0;
+
+        return (that.y - this.y) / (that.x - this.x);
     }
 
     // is this point lexicographically smaller than that one?
     // comparing y-coordinates and breaking ties by x-coordinates
     public int compareTo(Point that) {
-        /* YOUR CODE HERE */
+        // Y-major comparison
+        if (this.y < that.y) {
+            return -1;
+        }
+        else if (this.y > that.y) {
+            return 1;
+        }
+        else { // Y is equal, break the tie with X.
+            if (this.x < that.x) {
+                return -1;
+            }
+            else if (this.x > that.x) {
+                return 1;
+            }
+        }
+        // they are equal
         return 0;
     }
 
