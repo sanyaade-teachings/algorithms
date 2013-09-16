@@ -48,7 +48,7 @@ public class Point implements Comparable<Point> {
         }
         if (this.y == that.y) return 0.0;
 
-        return (that.y - this.y) / (that.x - this.x);
+        return (that.y - this.y) / ((double) (that.x - this.x));
     }
 
     // is this point lexicographically smaller than that one?
@@ -81,6 +81,6 @@ public class Point implements Comparable<Point> {
 
     // unit test
     public static void main(String[] args) {
-        /* YOUR CODE HERE */
+        // unit tests live in PointTest.java (which uses junit)
     }
 }
