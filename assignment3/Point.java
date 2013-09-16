@@ -10,21 +10,47 @@
  *
  *************************************************************************/
 
-//import java.util.Comparator;
+import java.util.Comparator;
 
 public class Point implements Comparable<Point> {
 
     // compare points by slope
-    //public final Comparator<Point> SLOPE_ORDER;       // YOUR DEFINITION HERE
+    public final Comparator<Point> SLOPE_ORDER;
 
     private final int x;                              // x coordinate
     private final int y;                              // y coordinate
+
+    private class SlopeComparator implements Comparator<Point> {
+        private Point origin;
+        SlopeComparator(Point origin) {
+            this.origin = origin;
+        }
+
+        private boolean isEqualSlope(double a, double b) {
+            if (a == Double.POSITIVE_INFINITY
+                && b == Double.POSITIVE_INFINITY) {
+                return true;
+            }
+            double epsilon = 1E-5;
+            return ((a - b) < epsilon) && ((b - a) < epsilon);
+        }
+
+        public int compare(Point a, Point b) {
+            double slopeA = origin.slopeTo(a);
+            double slopeB = origin.slopeTo(b);
+
+            if (isEqualSlope(slopeA, slopeB)) return 0;
+            if (slopeA > slopeB) return 1;
+            return -1;
+        }
+    }
 
     // create the point (x, y)
     public Point(int x, int y) {
         /* DO NOT MODIFY */
         this.x = x;
         this.y = y;
+        this.SLOPE_ORDER = new SlopeComparator(this);
     }
 
     // plot this point to standard drawing

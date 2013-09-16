@@ -2,11 +2,11 @@
  * Name: Mark Pauley
  * Email: pauley@unsaturated.net
  *
- * Compilation:  javac Brue.java
+ * Compilation:  javac Brute.java
  * Execution:
  * Dependencies: Point.java
  *
- * Description: A Brute force version of the colinear point finder
+ * Description: A brute force version of the colinear point finder
  *
  *************************************************************************/
 

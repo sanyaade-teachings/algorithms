@@ -1,4 +1,4 @@
-assignmentObjects = Point Brute
+assignmentObjects = Point Brute Fast
 otherObjects = PointPlotter
 testObjects = Point
 assignmentName = collinear
