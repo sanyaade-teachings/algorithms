@@ -33,6 +33,13 @@ public class Brute {
             Arrays.sort(points);
         }
 
+        public void draw() {
+            Point a = points[0];
+            Point b = points[points.length -1];
+            a.drawTo(b);
+            StdDraw.show(0);
+        }
+
         public String toString() {
             StringBuffer result = new StringBuffer();
             for (int i = 0; i < points.length - 1; i++) {
@@ -53,12 +60,16 @@ public class Brute {
             int y = inputStream.readInt();
             result[i] = new Point(x, y);
         }
-        System.out.println("Read " + numPoints + " points");
         return result;
     }
 
 
     private static boolean isEqual(double a, double b) {
+        if (a == Double.POSITIVE_INFINITY 
+            && b == Double.POSITIVE_INFINITY) {
+            return true;
+        }
+        
         double epsilon = 1E-5;
         return ((a - b) < epsilon) && ((b - a) < epsilon);
     }
@@ -81,6 +92,7 @@ public class Brute {
                         if (isEqual(slope, C.slopeTo(D))) {
                             Line line = new Line(A, B, C, D);
                             System.out.println(line.toString());
+                            line.draw();
                         }
                     }
                 }
@@ -93,6 +105,10 @@ public class Brute {
         In fileInputStream = new In(args[0]);
         Point[] points = readPoints(fileInputStream);
         Arrays.sort(points);
+        StdDraw.setXscale(0, 32768);
+        StdDraw.setYscale(0, 32768);
+        StdDraw.show(0);
         bruteLines(points);
+        StdDraw.show(0);
     }
 }
