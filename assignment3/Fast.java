@@ -82,20 +82,27 @@ public class Fast {
         for (int i = 0; i < points.length - 1; i++) {
             Point curPoint = points[i];
             Comparator<Point> slopeTest = curPoint.SLOPE_ORDER;
-            Point[] otherPoints = Arrays.copyOfRange(points, i + 1, 
-                                                     points.length);
+            Point[] otherPoints = Arrays.copyOf(points, points.length);
+                                                    
             Arrays.sort(otherPoints, slopeTest);
             int j = 0;
             while (j < otherPoints.length) {
                 // gobble up all of the collinear points.
                 // they will be in a row, since we're sorted by slope.
                 int k = 1;
+                boolean alreadyFoundLine = false;
+                if (0 < curPoint.compareTo(otherPoints[j])) {
+                    alreadyFoundLine = true;
+                }
                 while ((j + k < otherPoints.length)
                        && (0 == (slopeTest.compare(otherPoints[j],
                                                    otherPoints[j + k])))) {
+                    if (0 < curPoint.compareTo(otherPoints[j + k])) {
+                        alreadyFoundLine = true;
+                    }
                     k++;
                 }
-                if (k >= 3) {
+                if (!alreadyFoundLine && k >= 3) {
                     Point[] foundPoints = new Point[k + 1];
                     foundPoints[0] = curPoint;
                     for (int l = 0; l < k; l++) {
