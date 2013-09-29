@@ -99,9 +99,15 @@ public class Board {
     }
     
 
-    public boolean equals(Object y) {
-        // does this board equal y?
-        return false;
+    public boolean equals(Object other) {
+        if (this.getClass() != other.getClass()) return false;
+        Board otherBoard = (Board) other;
+        // does this board equal the other board?
+        if (dimension() != otherBoard.dimension()) return false;
+        for (int i = 0; i < board.length; i++) 
+            if (board[i] != otherBoard.board[i]) return false;
+        
+        return true;
     }
 
     public Iterable<Board> neighbors() {

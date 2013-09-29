@@ -74,6 +74,17 @@ public class BoardTest {
         }
     }
 
+    @Test public void testEquals() {
+        Board solvedBoard = new Board(solvedBoard(4));
+        Board reversedBoard = new Board(reversedBoard(4));
+        assertFalse(solvedBoard.equals(reversedBoard));
+        assertFalse(reversedBoard.equals(solvedBoard));
+        assertFalse(solvedBoard.equals(solvedBoard.twin()));
+        Board otherReversedBoard = new Board(reversedBoard(4));
+        assertTrue(otherReversedBoard.equals(reversedBoard));
+    }
+
+    
     public static void main(String args[]) {
         org.junit.runner.JUnitCore.main("BoardTest");
     }
