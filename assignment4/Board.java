@@ -34,12 +34,33 @@ public class Board {
 
     public int hamming() {
         // number of blocks out of place
-        return 0;
+        int numOutOfPlace = 0;
+        for (int i = 0; i < (N * N); i++) {
+            if (board[i] != i) numOutOfPlace++;
+        }
+        return numOutOfPlace;
     }
     
     public int manhattan() {
         // sum of Manhattan distances between blocks and goal
-        return 0;
+        int sum = 0;
+        for (int i = 0; i < (N * N); i++) 
+            sum += manhattanDistance(i, board[i]);
+        
+        return sum;
+    }
+
+    private int manhattanDistance(int position, int value) {
+        int row = position % N;
+        int col = position / N;
+        int goalRow = value % N;
+        int goalCol = value / N;
+        return abs(goalRow - row) + abs(goalCol - col);
+    }
+
+    private int abs(int i) {
+        if (i < 0) return -1 * i;
+        return i;
     }
     
     public boolean isGoal() {
