@@ -27,6 +27,17 @@ public class Board {
         }
     }
 
+    /*
+     * Convenience constructor (private)
+     */
+    private Board(int[] board, int N) {
+        this.N = N;
+        this.board = new int[N * N];
+        for (int i = 0; i < board.length; i++) {
+            this.board[i] = board[i];
+        }
+    }
+
     public int dimension() {
         // board dimension N
         return N;
@@ -70,8 +81,23 @@ public class Board {
      
     public Board twin() {
         // a board obtained by exchanging two adjacent blocks in the same row
-        return null;
+        int firstExchangeSquare = findTwinPoint();
+        int[] twinBoard = java.util.Arrays.copyOf(board, board.length);
+        int temp = twinBoard[firstExchangeSquare];
+        twinBoard[firstExchangeSquare] = twinBoard[firstExchangeSquare + 1];
+        twinBoard[firstExchangeSquare + 1] = temp;
+        return new Board(twinBoard, N);
     }
+
+    private int findTwinPoint() {
+        for (int i = 0; i < N; i++)
+            for (int j = 0; j < N - 1; j++)
+                if ((board[i * N + j] != 0) && (board[i * N + j + 1] != 0))
+                return i;
+
+        return -1;
+    }
+    
 
     public boolean equals(Object y) {
         // does this board equal y?

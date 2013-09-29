@@ -57,13 +57,21 @@ public class BoardTest {
         assertEquals(reversedBoard.manhattan(), 8);
         reversedBoard = new Board(reversedBoard(3));
         assertEquals(reversedBoard.manhattan(), 24);
-       reversedBoard = new Board(reversedBoard(4));
+        reversedBoard = new Board(reversedBoard(4));
         assertEquals(reversedBoard.manhattan(), 64);
     }
 
     @Test public void testIsGoal() {
         assertTrue(new Board(solvedBoard(4)).isGoal());
         assertFalse(new Board(reversedBoard(4)).isGoal());
+    }
+
+    @Test public void testTwin() {
+        for(int i = 2; i < 128; i++) {
+            Board solvedBoard = new Board(solvedBoard(i));
+            Board twinBoard = solvedBoard.twin();
+            assertFalse(twinBoard.isGoal());
+        }
     }
 
     public static void main(String args[]) {
