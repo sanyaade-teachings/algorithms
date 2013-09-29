@@ -61,6 +61,11 @@ public class BoardTest {
         assertEquals(reversedBoard.manhattan(), 64);
     }
 
+    @Test public void testIsGoal() {
+        assertTrue(new Board(solvedBoard(4)).isGoal());
+        assertFalse(new Board(reversedBoard(4)).isGoal());
+    }
+
     public static void main(String args[]) {
         org.junit.runner.JUnitCore.main("BoardTest");
     }
