@@ -102,7 +102,7 @@ public class Board {
         }
     }
 
-    public Board(Board otherBoard, int swapTo) {
+    private Board(Board otherBoard, int swapTo) {
         N = otherBoard.N;
         board = java.util.Arrays.copyOf(otherBoard.board, N*N);
         board[otherBoard.zeroIndex] = board[swapTo];
@@ -134,10 +134,10 @@ public class Board {
     public int hamming() {
         // number of blocks out of place
         int numOutOfPlace = 0;
-        for (int i = 0; i < (N * N) - 1; i++) {
+        for (int i = 0; i < (N * N); i++) {
             if (board[i] != i + 1) numOutOfPlace++;
         }
-        if (board[N * N - 1] != 0) numOutOfPlace++;
+        if (board[N * N - 1] == 0) numOutOfPlace--;
         return numOutOfPlace;
     }
     
