@@ -190,7 +190,7 @@ public class Board {
         for (int i = 0; i < N; i++)
             for (int j = 0; j < N - 1; j++)
                 if ((board[i * N + j] != 0) && (board[i * N + j + 1] != 0))
-                return i;
+                return i * N + j;
 
         return -1;
     }
