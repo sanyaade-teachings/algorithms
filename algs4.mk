@@ -14,7 +14,7 @@ testClassFiles = $(patsubst %,%.class,$(testObjects))
 classpath = ./:../stdlib.jar:../algs4.jar
 testclasspath = $(classpath):../junit-4.11/junit-4.11.jar:../junit-4.11/hamcrest-core-1.3.jar
 
-JAVA = java -classpath $(classpath)
+JAVA = java -Xmx4000m -classpath $(classpath)
 JAVAC = javac -classpath $(testclasspath)
 JUNIT = java -classpath $(testclasspath) org.junit.runner.JUnitCore
 

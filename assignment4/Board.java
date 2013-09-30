@@ -15,7 +15,7 @@ import java.util.Iterator;
 public class Board {
 
     private int N;
-    private int[] board;
+    private char[] board;
     private int zeroIndex;
 
     private class Neighbors implements Iterable<Board> {
@@ -43,7 +43,7 @@ public class Board {
             }
             
             public void remove() {
-                // throw exception?
+                // FIXME: throw exception?
             }
             
         }
@@ -82,6 +82,7 @@ public class Board {
         public Iterator<Board> iterator() {
             return new NeighborIterator(this);
         }
+
     }
 
     public Board(int[][] blocks) {
@@ -89,10 +90,10 @@ public class Board {
         // (where blocks[i][j] = block in row i, column j)
         N = blocks.length;
         zeroIndex = -1;
-        board = new int[N * N];
+        board = new char[N * N];
         for (int i = 0; i < N; i++) {
             for (int j = 0; j < N; j++) {
-                int val = blocks[i][j];
+                char val = (char) blocks[i][j];
                 board[(i * N) + j] = val;
                 if (val == 0) zeroIndex = (i * N) + j;
             }
@@ -110,12 +111,12 @@ public class Board {
     /*
      * Convenience constructor (private)
      */
-    private Board(int[] board, int N) {
+    private Board(char[] board, int N) {
         this.N = N;
-        this.board = new int[N * N];
+        this.board = new char[N * N];
         zeroIndex = -1;
         for (int i = 0; i < board.length; i++) {
-            int val = board[i];
+            char val = board[i];
             this.board[i] = val;
             if (val == 0) zeroIndex = i;
         }
@@ -165,8 +166,8 @@ public class Board {
     public Board twin() {
         // a board obtained by exchanging two adjacent blocks in the same row
         int firstExchangeSquare = findTwinPoint();
-        int[] twinBoard = java.util.Arrays.copyOf(board, board.length);
-        int temp = twinBoard[firstExchangeSquare];
+        char[] twinBoard = java.util.Arrays.copyOf(board, board.length);
+        char temp = twinBoard[firstExchangeSquare];
         twinBoard[firstExchangeSquare] = twinBoard[firstExchangeSquare + 1];
         twinBoard[firstExchangeSquare + 1] = temp;
         return new Board(twinBoard, N);
@@ -209,7 +210,7 @@ public class Board {
         sb.append('\n');
         for (int i = 0; i < N; i++) {
             for (int j = 0; j < N; j++) {
-                sb.append(String.format("%3d", board[i * N + j]));
+                sb.append(String.format("%2d", (int) board[i * N + j]));
             }
             sb.append('\n');
         }
