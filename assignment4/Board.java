@@ -17,6 +17,7 @@ public class Board {
     private int N;
     private char[] board;
     private int zeroIndex;
+    private int manhattanDistance;
 
     private class Neighbors implements Iterable<Board> {
         private Board boardObj;
@@ -90,6 +91,7 @@ public class Board {
         // (where blocks[i][j] = block in row i, column j)
         N = blocks.length;
         zeroIndex = -1;
+        manhattanDistance = -1;
         board = new char[N * N];
         for (int i = 0; i < N; i++) {
             for (int j = 0; j < N; j++) {
@@ -106,6 +108,7 @@ public class Board {
         board[otherBoard.zeroIndex] = board[swapTo];
         board[swapTo] = 0;
         zeroIndex = swapTo;
+        manhattanDistance = -1;
     }
 
     /*
@@ -115,6 +118,7 @@ public class Board {
         this.N = N;
         this.board = new char[N * N];
         zeroIndex = -1;
+        manhattanDistance = -1;
         for (int i = 0; i < board.length; i++) {
             char val = board[i];
             this.board[i] = val;
@@ -130,26 +134,35 @@ public class Board {
     public int hamming() {
         // number of blocks out of place
         int numOutOfPlace = 0;
-        for (int i = 0; i < (N * N); i++) {
-            if (board[i] != i) numOutOfPlace++;
+        for (int i = 0; i < (N * N) - 1; i++) {
+            if (board[i] != i + 1) numOutOfPlace++;
         }
+        if (board[N * N - 1] != 0) numOutOfPlace++;
         return numOutOfPlace;
     }
     
     public int manhattan() {
-        // sum of Manhattan distances between blocks and goal
-        int sum = 0;
-        for (int i = 0; i < (N * N); i++) 
-            sum += manhattanDistance(i, board[i]);
-        
-        return sum;
+        if (manhattanDistance == -1) {
+            // sum of Manhattan distances between blocks and goal
+            int sum = 0;
+            for (int i = 0; i < (N * N); i++) 
+                sum += manhattanDistance(i, board[i]);
+            
+            manhattanDistance = sum;
+        }
+        return manhattanDistance;
     }
 
     private int manhattanDistance(int position, int value) {
-        int row = position % N;
-        int col = position / N;
-        int goalRow = value % N;
-        int goalCol = value / N;
+        int row = position / N;
+        int col = position % N;
+        int goalRow = (value - 1) / N;
+        int goalCol = (value - 1) % N;
+        if (value == 0) {
+            goalRow = N - 1;
+            goalCol = N - 1;
+        }
+
         return abs(goalRow - row) + abs(goalCol - col);
     }
 
@@ -210,7 +223,7 @@ public class Board {
         sb.append('\n');
         for (int i = 0; i < N; i++) {
             for (int j = 0; j < N; j++) {
-                sb.append(String.format("%2d", (int) board[i * N + j]));
+                sb.append(String.format("%3d", (int) board[i * N + j]));
             }
             sb.append('\n');
         }

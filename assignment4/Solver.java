@@ -130,6 +130,10 @@ public class Solver {
             GameTreeNode curTwin = twinNodeQueue.delMin();
             if (curTwin.board.isGoal()) {
                 isSolvable = false;
+                System.out.println("Unsolvable!");
+                for (Board board : curTwin) {
+                    System.out.println(board.toString());
+                }
                 continue;
             }
             else {

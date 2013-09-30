@@ -14,21 +14,22 @@ public class BoardTest {
 
     private int[][] solvedBoard(int N) {
         int[][] blocks = new int[N][N];
-        int blockNum = 0;
+        int blockNum = 1;
         for (int i = 0; i < N; i++)
             for (int j = 0; j < N; j++)
                 blocks[i][j] = blockNum++;
-
+        blocks[N-1][N-1] = 0;
         return blocks;
     }
 
     private int[][] reversedBoard(int N) {
         int[][] blocks = new int[N][N];
-        int blockNum = (N * N) - 1;
+        int blockNum = (N * N);
         for (int i = 0; i < N; i++)
             for (int j = 0; j < N; j++)
                 blocks[i][j] = blockNum--;
 
+        blocks[0][0] = 0;
         return blocks;
     }
     
