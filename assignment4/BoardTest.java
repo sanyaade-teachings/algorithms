@@ -84,6 +84,30 @@ public class BoardTest {
         assertTrue(otherReversedBoard.equals(reversedBoard));
     }
 
+    @Test public void testNeighborsSolved() {
+        Board solvedBoard = new Board (solvedBoard(4));
+        Iterable<Board> neighbors = solvedBoard.neighbors();
+        int numNeighbors = 0;
+        
+        for(Board board : neighbors) {
+            // both the zero and the neighbor are out of place by one.
+            assertEquals(2, board.hamming());
+            numNeighbors++;;
+        }
+        assertEquals(2, numNeighbors);
+    }
+
+    @Test public void testNeighborsReversed() {
+        Board reversedBoard = new Board (reversedBoard(4));
+        Iterable<Board> neighbors = reversedBoard.neighbors();
+        int numNeighbors = 0;
+        
+        for(Board board : neighbors) {
+            // both the zero and the neighbor are out of place by one.
+            numNeighbors++;
+        }
+        assertEquals(2, numNeighbors);
+    }
     
     public static void main(String args[]) {
         org.junit.runner.JUnitCore.main("BoardTest");
