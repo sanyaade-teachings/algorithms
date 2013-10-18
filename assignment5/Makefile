@@ -1,10 +1,13 @@
-assignmentObjects = PointSET
+assignmentObjects = PointSET KdTree
 otherObjects = RectHV
-testObjects = PointSET
-assignmentName = 
+testObjects = PointSET KdTree
+assignmentName = kdtree
 
 include ../algs4.mk
 
 PointSET.test: PointSET.class RectHV.class PointSETTest.class
 	$(JUNIT) PointSETTest
+
+KdTree.test: KdTree.class RectHV.class KdTreeTest.class
+	$(JUNIT) KdTreeTest
 

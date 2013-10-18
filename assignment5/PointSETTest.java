@@ -1,7 +1,7 @@
 /****                                                                           
  *                                                                              
- * BoardTest.java                                                               
- * a junit test for the Board class                                             
+ * PointSETTest.java
+ * a junit test for the PointSET class
  *                                                                              
  ****/
 
