@@ -60,14 +60,10 @@ public class KdTree {
             double pointCoord = 0.0;
             double myCoord = 0.0;
             if (horizontal) {
-                System.out.println("Searching Horizontal (" 
-                                   + point.x() + ", " + point.y() + ")");
                 pointCoord = point.x();
                 myCoord = p.x();
             }
             else {
-                System.out.println("Searching Vertical (" 
-                                   + point.x() + ", " + point.y() + ")");
                 pointCoord = point.y();
                 myCoord = p.y();
             }

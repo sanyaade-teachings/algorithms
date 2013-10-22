@@ -1,5 +1,5 @@
 assignmentObjects = PointSET KdTree
-otherObjects = RectHV
+otherObjects = RectHV NearestNeighborVisualizer RangeSearchVisualizer
 testObjects = PointSET KdTree
 assignmentName = kdtree
 
