@@ -16,7 +16,6 @@ public class KdTree {
 
     private static class Node {
         private Point2D p; // the point
-        private RectHV rect; // the axis-aligned rectangle for this node
         private Node lb; // the left/bottom subtree
         private Node rt; // the right/top subtree
 
@@ -50,7 +49,9 @@ public class KdTree {
                 return tree;
             }
         }
-
+        
+        // Horizontal is true we are spliting the X-axis
+        //  meaning that the dividing line is parallel to the Y-axis
         public boolean containsPoint(Point2D point,
                                      boolean horizontal) {
             if (p.equals(point)) {
@@ -81,6 +82,132 @@ public class KdTree {
                     return false;
             }
         }
+
+        private RectHV lbRect(RectHV rect,
+                              boolean horizontal) {
+            if (horizontal) {
+                // bisect to the left
+                return new RectHV(rect.xmin(), rect.ymin(), 
+                                  p.x(), rect.ymax());
+            }
+            else {
+                // bisect to the bottom
+                return new RectHV(rect.xmin(), rect.ymin(),
+                                  rect.xmax(), p.y());
+            }
+        }
+
+        private RectHV rtRect(RectHV rect,
+                              boolean horizontal) {
+            if (horizontal) {
+                // bisect to the right
+                return new RectHV(p.x(),       rect.ymin(),
+                                  rect.xmax(), rect.ymax());
+            }
+            else {
+                // bisect to the top
+                return new RectHV(rect.xmin(), p.y(),
+                                  rect.xmax(), rect.ymax());
+            }
+        }
+        
+        // returns -1 for lb, 0 for intersecting and 1 for rt
+        private int compareToRect(RectHV rect, boolean horizontal) {
+            double dividingCoord;
+            double minCoord;
+            double maxCoord;
+            if (horizontal) {
+                dividingCoord = p.x();
+                minCoord = rect.xmin();
+                maxCoord = rect.xmax();
+            }
+            else {
+                dividingCoord = p.y();
+                minCoord = rect.ymin();
+                maxCoord = rect.ymax();
+            }
+            
+            if (maxCoord < dividingCoord) {
+                return -1;
+            }
+            else if (minCoord >= dividingCoord) {
+                return 1;
+            }
+            else {
+                return 0;
+            }
+        }
+        
+        public SET<Point2D> pointsInRange(RectHV rect, 
+                                 boolean horizontal) {
+            SET<Point2D> result = new SET<Point2D>();
+            System.out.println("Checking rect " + rect);
+            if (rect.contains(p)) {
+                System.out.println("Found " + p);
+                result.add(p);
+                rect.draw();
+                StdDraw.show(5000);
+            }
+            
+            int comparison = compareToRect(rect, horizontal);
+            boolean needToCheckRT = (comparison >= 0);
+            boolean needToCheckLB = (comparison <= 0);
+
+            RectHV subRect;
+            // Left/Bottom
+            if (needToCheckLB && lb != null) {
+                subRect = lbRect(rect, horizontal);
+                System.out.println("Branching Left: " + subRect);
+                SET<Point2D> lbPoints = lb.pointsInRange(subRect, !horizontal);
+                if (lbPoints != null) {
+                    result = result.union(lbPoints);
+                }
+            }
+
+            // Right/Top
+            if (needToCheckRT && rt != null) {
+                subRect = rtRect(rect, horizontal);
+                System.out.println("Branching Right: " + subRect);
+                SET<Point2D> rtPoints = rt.pointsInRange(subRect, !horizontal);
+                if (rtPoints != null) {
+                    result = result.union(rtPoints);
+                }
+            }
+
+            return result;
+        }
+        
+        public void draw(RectHV rect, boolean horizontal) {
+            if (horizontal) {
+                drawHorizontalSplit(rect);
+            }
+            else {
+                drawVerticalSplit(rect);
+            }
+
+            StdDraw.setPenColor(StdDraw.BLACK);
+            StdDraw.setPenRadius(.01);
+            p.draw();
+            
+            if (lb != null) {
+                lb.draw(lbRect(rect, horizontal), !horizontal);
+            }
+            if (rt != null) {
+                rt.draw(rtRect(rect, horizontal), !horizontal);
+            }
+        }
+
+        private void drawHorizontalSplit(RectHV rect) {
+            StdDraw.setPenColor(StdDraw.RED);
+            StdDraw.setPenRadius();
+            StdDraw.line(p.x(), rect.ymin(), p.x(), rect.ymax());
+        }
+        private void drawVerticalSplit(RectHV rect) {
+            StdDraw.setPenColor(StdDraw.BLUE);
+            StdDraw.setPenRadius();
+            StdDraw.line(rect.xmin(), p.y(), rect.xmax(), p.y());
+        }
+        
     }
 
     private int size;
@@ -117,12 +244,20 @@ public class KdTree {
     }
     
     public void draw() {
-        // draw all of the points to standard draw
+        if (root != null) {
+            RectHV rootRect = new RectHV(0.0, 0.0, 1.0, 1.0);
+            root.draw(rootRect, true);
+        }
     }
      
     public Iterable<Point2D> range(RectHV rect) {
-        // all points in the set that are inside the rectangle
-        return null;
+        if (root != null) {
+            // this falls over when root is not in rect.
+            return root.pointsInRange(rect, true);
+        }
+        else {
+            return new SET<Point2D>();
+        }
     }
 
     public Point2D nearest(Point2D p) {
