@@ -87,13 +87,15 @@ public class KdTree {
                               boolean horizontal) {
             if (horizontal) {
                 // bisect to the left
+                double newMaxX = Math.min(p.x(), rect.xmax());
                 return new RectHV(rect.xmin(), rect.ymin(), 
-                                  p.x(), rect.ymax());
+                                  newMaxX, rect.ymax());
             }
             else {
                 // bisect to the bottom
+                double newMaxY = Math.min(p.y(), rect.ymax());
                 return new RectHV(rect.xmin(), rect.ymin(),
-                                  rect.xmax(), p.y());
+                                  rect.xmax(), newMaxY);
             }
         }
 
@@ -101,12 +103,14 @@ public class KdTree {
                               boolean horizontal) {
             if (horizontal) {
                 // bisect to the right
-                return new RectHV(p.x(),       rect.ymin(),
+                double newMinX = Math.max(p.x(), rect.xmin());
+                return new RectHV(newMinX,     rect.ymin(),
                                   rect.xmax(), rect.ymax());
             }
             else {
                 // bisect to the top
-                return new RectHV(rect.xmin(), p.y(),
+                double newMinY = Math.max(p.y(), rect.ymin());
+                return new RectHV(rect.xmin(), newMinY,
                                   rect.xmax(), rect.ymax());
             }
         }
@@ -145,8 +149,6 @@ public class KdTree {
             if (rect.contains(p)) {
                 System.out.println("Found " + p);
                 result.add(p);
-                rect.draw();
-                StdDraw.show(5000);
             }
             
             int comparison = compareToRect(rect, horizontal);

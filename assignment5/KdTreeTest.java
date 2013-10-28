@@ -84,16 +84,16 @@ public class KdTreeTest {
     @Test public void testRangeXYGridIncreasing() {
         SET<Point2D> expectedPoints = new SET<Point2D>();
         RectHV testRect = new RectHV(0.45, 0.25, 0.60, 0.70);
-        for(double xCoord = 0.5; xCoord < 1.0; xCoord += 0.1) {
-            for(double yCoord = 0.0; yCoord < 1.0; yCoord += 0.2) {
+        for(double xCoord = 0.5; xCoord < 1.0; xCoord += 0.01) {
+            for(double yCoord = 0.0; yCoord < 1.0; yCoord += 0.02) {
                 Point2D testPoint = new Point2D(xCoord, yCoord);
                 if (testRect.contains(testPoint)) 
                     expectedPoints.add(testPoint);
                 testTree.insert(testPoint);
             }
         }
-        //testRect.draw();
-        //testTree.draw();
+        testRect.draw();
+        testTree.draw();
         SET<Point2D> actualPoints = new SET<Point2D>();
         for(Point2D point : testTree.range(testRect)) {
             actualPoints.add(point);
