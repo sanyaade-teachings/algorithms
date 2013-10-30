@@ -173,6 +173,72 @@ public class KdTree {
             }
             return result;
         }
+
+        public Point2D nearest(Point2D point, RectHV rect, boolean horizontal) {
+            Point2D result = p;
+            double minDistSquared = p.distanceSquaredTo(point);
+            double splittingCoord;
+            double pointCoord;
+
+            System.out.println("Checking " + p);
+            if (horizontal) {
+                splittingCoord = p.x();
+                pointCoord = point.x();
+            }
+            else {
+                splittingCoord = p.y();
+                pointCoord = point.y();
+            }
+            
+            // Set up the order we check the subtrees
+            //  to maximize the chances of pruning
+            Node[] nodesToCheck = new Node[2];
+            RectHV[] rectsToCheck = new RectHV[2];
+            int lbIdx;
+            int rtIdx;
+            if (pointCoord < splittingCoord) {
+                // If the point is on the left / bottom of the split,
+                //  try left / bottom first.
+                lbIdx = 0;
+                rtIdx = 1;
+            }
+            else {
+                // Otherwise try right / top first.
+                lbIdx = 1;
+                rtIdx = 0;
+            }
+            if (lb != null) {
+                nodesToCheck[lbIdx] = lb;
+                rectsToCheck[lbIdx] = lbRect(rect, horizontal);
+            }
+            if (rt != null) {
+                nodesToCheck[rtIdx] = rt;
+                rectsToCheck[rtIdx] = rtRect(rect, horizontal);
+            }
+            
+            // Check both subtrees for minimum distance
+            for (int i = 0; i < 2; i++) {
+                if (nodesToCheck[i] != null) {
+                    double subRectDistSquared 
+                        = rectsToCheck[i].distanceSquaredTo(point);
+                    // prune this subtree if the minimum possible distance
+                    // isn't less than the current minimum distance
+                    if (subRectDistSquared < minDistSquared) {
+                        // recurse
+                        Point2D subtreeMinPoint 
+                            = nodesToCheck[i].nearest(point, rectsToCheck[i],
+                                                      !horizontal);
+                        double subtreeMinDistanceSquared
+                            = subtreeMinPoint.distanceSquaredTo(point);
+                        if (subtreeMinDistanceSquared < minDistSquared) {
+                            minDistSquared = subtreeMinDistanceSquared;
+                            result = subtreeMinPoint;
+                        }
+                    }
+                }
+            }
+            return result;
+        }
         
         public void draw(RectHV rect, boolean horizontal) {
             if (horizontal) {
@@ -243,8 +309,11 @@ public class KdTree {
     }
     
     public void draw() {
+        StdDraw.setPenColor();
+        StdDraw.setPenRadius();
+        RectHV rootRect = new RectHV(0.0, 0.0, 1.0, 1.0);
+        rootRect.draw();
         if (root != null) {
-            RectHV rootRect = new RectHV(0.0, 0.0, 1.0, 1.0);
             root.draw(rootRect, true);
         }
     }
@@ -260,7 +329,8 @@ public class KdTree {
     }
 
     public Point2D nearest(Point2D p) {
-        // a nearest neighbor in the set to p; null if set is empty
-        return null;
+        if (root == null) return null;
+        RectHV rootRect = new RectHV(0.0, 0.0, 1.0, 1.0);
+        return root.nearest(p, rootRect, true);
     }
 }
