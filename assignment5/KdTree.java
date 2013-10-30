@@ -145,9 +145,7 @@ public class KdTree {
         public SET<Point2D> pointsInRange(RectHV rect, 
                                  boolean horizontal) {
             SET<Point2D> result = new SET<Point2D>();
-            System.out.println("Checking rect " + rect);
             if (rect.contains(p)) {
-                System.out.println("Found " + p);
                 result.add(p);
             }
             
@@ -159,7 +157,6 @@ public class KdTree {
             // Left/Bottom
             if (needToCheckLB && lb != null) {
                 subRect = lbRect(rect, horizontal);
-                System.out.println("Branching Left: " + subRect);
                 SET<Point2D> lbPoints = lb.pointsInRange(subRect, !horizontal);
                 if (lbPoints != null) {
                     result = result.union(lbPoints);
@@ -169,13 +166,11 @@ public class KdTree {
             // Right/Top
             if (needToCheckRT && rt != null) {
                 subRect = rtRect(rect, horizontal);
-                System.out.println("Branching Right: " + subRect);
                 SET<Point2D> rtPoints = rt.pointsInRange(subRect, !horizontal);
                 if (rtPoints != null) {
                     result = result.union(rtPoints);
                 }
             }
-
             return result;
         }
         
@@ -233,8 +228,10 @@ public class KdTree {
     
     public void insert(Point2D p) {
         // add the point p to the set (if it is not already in the set)
-        root = Node.insertPoint(root, p, true);
-        size++;
+        if (root == null || !root.containsPoint(p, true)) {
+            root = Node.insertPoint(root, p, true);
+            size++;
+        }
     }
     
     public boolean contains(Point2D p) {
