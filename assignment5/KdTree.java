@@ -180,7 +180,6 @@ public class KdTree {
             double splittingCoord;
             double pointCoord;
 
-            System.out.println("Checking " + p);
             if (horizontal) {
                 splittingCoord = p.x();
                 pointCoord = point.x();
