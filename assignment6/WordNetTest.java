@@ -27,14 +27,24 @@ public class WordNetTest {
         for(String s : wordNet.nouns()) {
             i++;
         }
-        assertEquals(76066, i);
+        assertEquals(119188, i);
     }
 
     @Test public void testIsNoun() {
         assertTrue(wordNet.isNoun("love"));
-        assertFalse(wordNet.isNoun("lovely"));
+        assertFalse(wordNet.isNoun("foo"));
     }
 
+    @Test public void testCousins() {
+        assertEquals(4, wordNet.distance("administrative_district",
+                                         "populated_area"));
+        assertEquals("region", wordNet.sap("administrative_district",
+                                           "populated_area"));
+    }
+
+    @Test public void testBlackThings() {
+        assertEquals(33, wordNet.distance("Black_Plague", "black_marlin"));
+    }
 
     public static void main(String args[]) {
         org.junit.runner.JUnitCore.main("WordNetTest");
