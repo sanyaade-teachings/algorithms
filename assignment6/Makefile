@@ -1,7 +1,7 @@
 assignmentObjects = WordNet SAP Outcast
 otherObjects = 
 testObjects = WordNet SAP Outcast
-assignmentName = kdtree
+assignmentName = wordnet
 
 include ../algs4.mk
 
