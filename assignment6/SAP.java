@@ -80,9 +80,11 @@ public class SAP {
     
     private Iterable<Integer> sap(Iterable<Integer> u,
                                   Iterable<Integer> w) {
-        // 1) get a list of all ancestors of v
+        // 1) get a list of all ancestors common to u and v
         //  store this in ancestors. O(V + E)
-        Iterable<Integer> ancestors = ancestors(u);
+        SET<Integer> uAncestors = ancestors(u);
+        SET<Integer> wAncestors = ancestors(w);
+        SET<Integer> ancestors = uAncestors.intersects(wAncestors);
         
         // 2) find the shortest path from any ancestor to w (do BFS on G_rev)
         //   O(V + 2E)

@@ -103,8 +103,6 @@ public class WordNet {
     // distance between nounA and nounB (defined below)
     public int distance(String nounA, String nounB) {
         if (isNoun(nounA) && isNoun(nounB)) {
-            printDefs(nounA);
-            printDefs(nounB);
             return wordNetSAP.length(wordToIDs.get(nounA),
                                      wordToIDs.get(nounB));
         }
